@@ -24,24 +24,23 @@ public:
         current = nullptr;
     }
 
-    // Add a new song
+    // 🟢 Add a new song
     void addSong(string title, int duration) {
         Song* newSong = new Song(title, duration);
         if (!current) {
             current = newSong;
-            newSong->next = newSong; // circular
+            newSong->next = newSong; // circular link
         } else {
             Song* temp = current;
-            while (temp->next != current) {
+            while (temp->next != current)
                 temp = temp->next;
-            }
             temp->next = newSong;
             newSong->next = current;
         }
         cout << "Song added: " << title << endl;
     }
 
-    // Delete a song by title
+    // 🔴 Simplified delete function
     void deleteSong(string title) {
         if (!current) {
             cout << "Playlist is empty.\n";
@@ -53,27 +52,32 @@ public:
 
         do {
             if (temp->title == title) {
-                if (prev) {
-                    prev->next = temp->next;
-                } else {
-                    // Deleting current node
-                    if (temp->next == current) { // only one song
-                        delete temp;
-                        current = nullptr;
-                        cout << "Song deleted. Playlist is now empty.\n";
-                        return;
-                    }
+                // If only one song
+                if (temp->next == current && prev == nullptr) {
+                    delete temp;
+                    current = nullptr;
+                    cout << "Song deleted. Playlist is now empty.\n";
+                    return;
+                }
+
+                // If deleting first song
+                if (prev == nullptr) {
                     Song* last = current;
-                    while (last->next != current) {
+                    while (last->next != current)
                         last = last->next;
-                    }
                     current = current->next;
                     last->next = current;
                 }
+                // Deleting middle or last song
+                else {
+                    prev->next = temp->next;
+                }
+
                 delete temp;
                 cout << "Song deleted: " << title << endl;
                 return;
             }
+
             prev = temp;
             temp = temp->next;
         } while (temp != current);
@@ -81,7 +85,7 @@ public:
         cout << "Song not found.\n";
     }
 
-    // Play next song
+    // ⏭ Play next song
     void nextSong() {
         if (!current) {
             cout << "Playlist is empty.\n";
@@ -91,12 +95,13 @@ public:
         cout << "Now playing: " << current->title << " (" << current->duration << " sec)" << endl;
     }
 
-    // Display all songs
+    // 📜 Display all songs
     void showPlaylist() {
         if (!current) {
             cout << "Playlist is empty.\n";
             return;
         }
+
         cout << "\n--- Current Playlist ---\n";
         Song* temp = current;
         do {
