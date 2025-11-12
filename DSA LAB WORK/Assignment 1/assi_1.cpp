@@ -97,16 +97,21 @@ void mergesort(int arr[], int left, int right) {
 
 // 🔸 Quick Sort
 int partition(int arr[], int left, int right) {
-    int pivot = arr[right];
-    int i = left - 1;
-    for (int j = left; j < right; j++) {
+    int pivot = arr[left];  // CHANGE 1: Pick first element as pivot
+    int i = left;           // i tracks the "smaller elements" boundary
+
+    // Loop from the element AFTER the pivot (left + 1) to the end
+    for (int j = left + 1; j <= right; j++) {
         if (arr[j] < pivot) {
-            i++;
+            i++;            // Expand the "smaller" zone
             swap(arr[i], arr[j]);
         }
     }
-    swap(arr[i + 1], arr[right]);
-    return i + 1;
+    
+    // CHANGE 2: Put pivot in its correct position
+    swap(arr[left], arr[i]); 
+    
+    return i; // Return the pivot's final index
 }
 
 void quicksort(int arr[], int left, int right) {
@@ -200,3 +205,4 @@ int main() {
 
     return 0;
 }
+
