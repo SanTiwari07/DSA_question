@@ -11,7 +11,13 @@ struct Student {
 };
 
 class BST {
+public:
     Student* root;
+
+    // Constructor
+    BST() {
+        root = NULL;
+    }
 
     // Create new node
     Student* createNode(int r, string n, float m) {
@@ -38,6 +44,10 @@ class BST {
         return node;
     }
 
+    void insert(int r, string n, float m) {
+        root = insertRec(root, r, n, m);
+    }
+
     // Recursive Search
     Student* searchRec(Student* node, int r) {
         if (node == NULL || node->roll == r)
@@ -45,15 +55,22 @@ class BST {
 
         if (r < node->roll)
             return searchRec(node->left, r);
-        
+
         return searchRec(node->right, r);
     }
 
-    // Find minimum node (for deletion)
+    void search(int r) {
+        Student* s = searchRec(root, r);
+        if (s != NULL)
+            cout << "Found: " << s->roll << " " << s->name << " " << s->marks << endl;
+        else
+            cout << "Not found!\n";
+    }
+
+    // Find minimum node
     Student* findMin(Student* node) {
         while (node != NULL && node->left != NULL)
             node = node->left;
-
         return node;
     }
 
@@ -67,7 +84,7 @@ class BST {
         else if (r > node->roll)
             node->right = deleteRec(node->right, r);
         else {
-            // One or zero child
+            // Node with 1 or 0 children
             if (node->left == NULL) {
                 Student* temp = node->right;
                 delete node;
@@ -79,7 +96,7 @@ class BST {
                 return temp;
             }
 
-            // Two children
+            // Node with 2 children
             Student* temp = findMin(node->right);
             node->roll = temp->roll;
             node->name = temp->name;
@@ -91,7 +108,11 @@ class BST {
         return node;
     }
 
-    // Recursive Traversals
+    void del(int r) {
+        root = deleteRec(root, r);
+    }
+
+    // Traversals
     void inorderRec(Student* node) {
         if (node == NULL)
             return;
@@ -119,7 +140,7 @@ class BST {
         cout << node->roll << " " << node->name << " (" << node->marks << ")\n";
     }
 
-    // Non-recursive Inorder using stack
+    // Inorder Non-Recursive
     void inorderNonRec() {
         stack<Student*> st;
         Student* curr = root;
@@ -139,7 +160,7 @@ class BST {
         }
     }
 
-    // Find highest & lowest marks
+    // High / Low marks
     void findHighLow(Student* node, float &high, float &low) {
         if (node == NULL)
             return;
@@ -149,48 +170,6 @@ class BST {
 
         findHighLow(node->left, high, low);
         findHighLow(node->right, high, low);
-    }
-
-    // Count nodes
-    int countRec(Student* node) {
-        if (node == NULL)
-            return 0;
-
-        return 1 + countRec(node->left) + countRec(node->right);
-    }
-
-public:
-
-    BST() { root = NULL; }
-
-    void insert(int r, string n, float m) {
-        root = insertRec(root, r, n, m);
-    }
-
-    void del(int r) {
-        root = deleteRec(root, r);
-    }
-
-    void search(int r) {
-        Student* s = searchRec(root, r);
-        if (s != NULL)
-            cout << "Found: " << s->roll << " " << s->name << " " << s->marks << endl;
-        else
-            cout << "Not found!\n";
-    }
-
-    void displayAll() {
-        cout << "\nInorder (Recursive):\n";
-        inorderRec(root);
-
-        cout << "\nPreorder (Recursive):\n";
-        preorderRec(root);
-
-        cout << "\nPostorder (Recursive):\n";
-        postorderRec(root);
-
-        cout << "\nInorder (Non-Recursive):\n";
-        inorderNonRec();
     }
 
     void highLowMarks() {
@@ -206,8 +185,31 @@ public:
         cout << "\nLowest Marks: " << low << endl;
     }
 
+    // Count nodes
+    int countRec(Student* node) {
+        if (node == NULL)
+            return 0;
+
+        return 1 + countRec(node->left) + countRec(node->right);
+    }
+
     void totalStudents() {
         cout << "Total Students: " << countRec(root) << endl;
+    }
+
+    // DISPLAY ALL TRAVERSALS
+    void displayAll() {
+        cout << "\nInorder (Recursive):\n";
+        inorderRec(root);
+
+        cout << "\nPreorder (Recursive):\n";
+        preorderRec(root);
+
+        cout << "\nPostorder (Recursive):\n";
+        postorderRec(root);
+
+        cout << "\nInorder (Non-Recursive):\n";
+        inorderNonRec();
     }
 };
 
@@ -250,3 +252,4 @@ int main() {
     cout << "Exiting...\n";
     return 0;
 }
+
